@@ -15,7 +15,7 @@ spec:
         app: comapp
     spec:
       containers:
-        - name: controller
+        - name: comapp
           image: IMAGE_NAME
           ports:
             - containerPort: 8080
