@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:
+        comapp
+  template:
+    metadata:
+      labels:
+        app: comapp
+    spec:
+      containers:
+        - name: controller
+          image: IMAGE_NAME
+          ports:
+            - containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: comapp
+  labels:
+    app: comapp
+spec:
+  type: NodePort
+  selector:
+    app: comapp
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: comapp
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  namespace: comapp
+spec:
+  rules:
+    - host: "comapp.datasense.visiontech.com.sg"
+      http:
+        paths:
+          - path:
+            backend:
+              serviceName: comapp
+              servicePort: 8080
